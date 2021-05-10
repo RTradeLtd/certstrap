@@ -36,7 +36,9 @@ func TestRevokeCmd(t *testing.T) {
 	fs := flag.NewFlagSet("test", flag.ContinueOnError)
 	fs.String("CA", "", "")
 	fs.String("CN", "", "")
-	fs.Parse([]string{"-CA", "ca", "-CN", "cn"})
+	if err := fs.Parse([]string{"-CA", "ca", "-CN", "cn"}); err != nil {
+		t.Fatal("could not parse flags")
+	}
 
 	new(revokeCommand).run(cli.NewContext(nil, fs, nil))
 
@@ -73,7 +75,7 @@ func setupCA(t *testing.T, dt depot.Depot) {
 	}
 
 	// create certificate authority
-	caCert, err := pkix.CreateCertificateAuthority(key, caName, time.Now().Add(1*time.Minute), "", "", "", "", caName)
+	caCert, err := pkix.CreateCertificateAuthority(key, caName, time.Now().Add(1*time.Minute), "", "", "", "", caName, nil)
 	if err != nil {
 		t.Fatalf("could not create authority cert: %v", err)
 	}

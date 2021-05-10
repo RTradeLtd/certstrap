@@ -49,7 +49,7 @@ func TestCreateCertificateRevocationList(t *testing.T) {
 		t.Fatal("Failed creating rsa key:", err)
 	}
 
-	crt, err := CreateCertificateAuthority(key, "OU", time.Now().AddDate(5, 0, 0), "test", "US", "California", "San Francisco", "CA Name")
+	crt, err := CreateCertificateAuthority(key, "OU", time.Now().AddDate(5, 0, 0), "test", "US", "California", "San Francisco", "CA Name", nil)
 	if err != nil {
 		t.Fatal("Failed creating certificate authority:", err)
 	}
@@ -69,7 +69,7 @@ func TestCertificateRevocationList(t *testing.T) {
 	if err != nil {
 		t.Fatal("Failed exporting PEM-format bytes:", err)
 	}
-	if bytes.Compare(pemBytes, []byte(crlPEM)) != 0 {
+	if !bytes.Equal(pemBytes, []byte(crlPEM)) {
 		t.Fatal("Failed exporting the same PEM-format bytes")
 	}
 }
